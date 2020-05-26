@@ -37,6 +37,8 @@ error() { clear; printf "ERROR:\\n%s\\n" "$1"; exit;}
 
 welcomemsg() { \
 	dialog --title "Welcome!" --msgbox "Welcome to Luke's Auto-Rice Bootstrapping Script!\\n\\nThis script will automatically install a fully-featured Linux desktop, which I use as my main machine.\\n\\n-Luke" 10 60
+
+	dialog --colors --title "Important Note!" --yes-label "All ready!" --no-label "Return..." --yesno "Be sure the computer you are using has current pacman updates and refreshed Arch keyrings.\\n\\nIf it does not, the installation of some programs might fail." 8 70
 	}
 
 selectdotfiles() { \
@@ -230,7 +232,8 @@ git update-index --assume-unchanged "/home/$name/LICENSE"
 systembeepoff
 
 # Make zsh the default shell for the user.
-sed -i "s/^$name:\(.*\):\/bin\/\S*/$name:\1:\/bin\/zsh/" /etc/passwd
+chsh -s /bin/zsh $name >/dev/null 2>&1
+sudo -u "$name" mkdir -p "/home/$name/.cache/zsh/"
 
 # dbus UUID must be generated for Artix runit.
 dbus-uuidgen > /var/lib/dbus/machine-id
